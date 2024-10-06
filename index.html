@@ -1,0 +1,203 @@
+<html>
+<head>
+<style>
+html, body {
+	font-family: -apple-system, BlinkMacSystemFont, "Neue Haas Grotesk Text Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	color: #fff;
+}
+.background {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.dashboard {
+	position: absolute;
+	z-index: 3;
+	display: grid;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+}
+.datetime {
+	display: flex;
+	flex-direction: column;
+}
+.time_wrapper {
+	display: grid;
+	align-items: center;
+	grid-template-columns: minmax(78px, 1fr) minmax(0, auto) minmax(78px, 1fr);
+}
+.time {
+	font-size: 9rem;
+}
+.date_wrapper {
+	display: grid;
+	align-items: center;
+	grid-template-columns: minmax(40px, 1fr) minmax(0, auto) minmax(40px, 1fr);
+}
+.date {
+	font-size: 2.5rem;
+}
+.top {
+	display: grid;
+	grid-template-columns: auto minmax(auto, max-content);
+}
+.weather {
+	padding-right: calc(20px - 0.625rem);
+	display: flex;
+	flex-direction: column;
+	align-items: end;
+}
+.city, .weather_info, .todo__delete {
+	font-size: 0.8125rem;
+}
+.weather_temp {
+	font-size: 1.625rem;
+}
+.tasks {
+	padding: 10px;;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	display: block;
+	opacity: 1;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	text-align: left;
+	max-height: 100vh;
+	max-width: calc(100vw - 1.875rem);
+	min-width: 200px;
+	z-index: 2;
+	border-radius: 5px;
+	transition: all 0.15s ease;
+	background: #fff;
+	color: #000;
+	text-shadow: none;
+	box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.3);
+}
+.tasks_header {
+	font-size: 20px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-transform: capitalize;
+	white-space: nowrap;
+}
+.todo__items {
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.todo__item {
+	width: 100%;
+	height: 32px;
+	display: inline-block;
+	opacity: 1;
+	visibility: visible;
+	position: relative;
+	font-size: 1rem;
+	line-height: 1.1875;
+}
+ul, ol {
+	padding: 0;
+	list-style: none;
+}
+.todo__action {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  width: 32px;
+  height: 32px;
+  background-color: #80deea;
+  border-radius: 4px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 1;
+  transition: top 0.3s ease-in;
+}
+
+.todo__action::before {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  content: "";
+}
+
+.todo__action_delete {
+  right: 52px;
+  background-color: #e57373;
+}
+
+.todo__action_delete::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath fill='%23fff' d='M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.todo__input input {
+	width: 100%;
+	padding: 8px 21px 18px;
+	display: block;
+	opacity: 0.75;
+	border: none;
+	font-size: 1rem;
+}
+.todo__task, .chk_active {
+	position: relative;
+	top: 20%;
+}
+[data-todo-state="completed"] {
+  text-decoration: line-through;
+}
+</style>
+<script defer src="momentum.js" ></script>
+</head>
+<body>
+<div id="main">
+<div class="background" id="background"></div>
+<div class="dashboard">
+<div class="top">
+<div class="top_left"></div>
+<div class="weather">
+<div class="weather_temp"></div>
+<div class="weather_info"></div>
+<span class="city"></span>
+</div>
+</div>
+<div class="datetime">
+<div class="time_wrapper">
+<div class="time_left"></div>
+<div class="time" id="time"></div>
+<div class="time_right"></div>
+</div>
+<div class="date_wrapper">
+<div class="date_left"></div>
+<div class="date" id="date"></div>
+<div class="date_right"></div>
+</div>
+</div>
+<div class="bottom">
+<div class="tasks" style="height: auto; width: 320px;">
+<span class="tasks_header">Список задач</span>
+<ul class="todo__items" style="height: auto; opacity: 1;">
+</ul>
+<div class="todo__input">
+<input class="todo__text" type="text">
+<span class="todo__add"></span>
+</div>
+<input class="todo__delete" type="button" value="Удалить выполненные" >
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
