@@ -89,7 +89,7 @@ function weather(){
 		var lat = crd.latitude;
 		var lon = crd.longitude;
 		getWeatherData(lat, lon);
-		fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=a13a20d38cfd6e6f46dca29703c17941`)
+		fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&appid=a13a20d38cfd6e6f46dca29703c17941`)
 		.then(data => data.json())
 		.then(data => {
 			var city = data[0]['local_names']['ru'];
@@ -105,7 +105,7 @@ function weather(){
 			localStorage.setItem('city', city);
 		}
 		document.querySelector('.city').innerHTML = city;
-		fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=a13a20d38cfd6e6f46dca29703c17941`)
+		fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=a13a20d38cfd6e6f46dca29703c17941`)
 		.then(data => data.json())
 		.then(data => {
 			var lat = data[0]['lat'];
